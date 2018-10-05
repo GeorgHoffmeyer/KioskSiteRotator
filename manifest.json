@@ -1,0 +1,22 @@
+{
+    "manifest_version": 2,
+  
+    "name": "Kiosk Website Rotator",
+    "description": "This extension rotates diffrent websites",
+    "version": "1.0",
+  
+    "browser_action": {
+    "default_title": "Make this page red"
+    },
+    "background": {
+      "scripts": ["background.js"]
+    },
+    "permissions": [
+      "activeTab",
+      "storage",
+      "cookies",
+      "alarms",
+      "http://*/*", 
+      "https://*/*"
+    ]
+  }
