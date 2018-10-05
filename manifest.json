@@ -11,11 +11,16 @@
     "background": {
       "scripts": ["background.js"]
     },
+    "content_scripts" : [{
+      "matches": ["https://*/*", "http://*/*"],
+      "js" : ["content_script.js"]
+    }],
     "permissions": [
       "activeTab",
       "storage",
       "cookies",
       "alarms",
+      "webNavigation",
       "http://*/*", 
       "https://*/*"
     ]
