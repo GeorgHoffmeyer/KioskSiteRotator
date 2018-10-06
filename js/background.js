@@ -3,7 +3,7 @@ var settings;
 var currentIndex = 0;
 var activeTabId = null;
 const alarmName = "switchSite";
-var settingsUrl = "https://georghoffmeyer.files.wordpress.com/2018/10/url_sample2.pdf";
+var settingsUrl;// = "https://georghoffmeyer.files.wordpress.com/2018/10/url_sample2.pdf";
 
 chrome.browserAction.onClicked.addListener(function (tab) {
     debug("Button clicked");
@@ -21,6 +21,11 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
 
 chrome.runtime.onInstalled.addListener(() => {
+    chrome.storage.sync.get({
+        settingsurl: ""
+    }, function(items) {
+      settingsUrl = items.settingsurl;
+    });
     init();
 });
 
