@@ -1,22 +1,9 @@
 
-var urls;
-/* = [{
-    url: "https://www.google.de",
-    duration: 5000
-},
-{
-    url: "https://www.bing.com",
-    duration: 5000
-},
-{
-    url: "https://www.yahoo.com",
-    duration: 5000
-}];
-*/
-
+var settings;
 var currentIndex = 0;
 var activeTabId = null;
 const alarmName = "switchSite";
+var settingsUrl = "https://georghoffmeyer.files.wordpress.com/2018/10/url_sample2.pdf";
 
 chrome.browserAction.onClicked.addListener(function (tab) {
     debug("Button clicked");
@@ -39,8 +26,8 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
 
-    if (alarm.name == alarmName && activeTabId) {
-        var urlObj = urls[currentIndex];
+    if (alarm.name == alarmName && activeTabId && settings) {
+        var urlObj = settings.urls[currentIndex];
 
         debug("URL: " + urlObj.url + " duration: " + urlObj.duration);
 
@@ -76,7 +63,7 @@ function log(message) {
 
 function increseCurrentIndex() {
     currentIndex++;
-    if (currentIndex >= urls.length) {
+    if (currentIndex >= settings.urls.length) {
         currentIndex = 0;
     }
     debug("CurrentIndex: " + currentIndex);
@@ -90,11 +77,11 @@ function init() {
 
 function loadSettings() {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://georghoffmeyer.files.wordpress.com/2018/10/url_sample.pdf", true);
+    xhr.open("GET", settingsUrl, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
             // JSON.parse does not evaluate the attacker's scripts.
-            urls = JSON.parse(xhr.responseText);
+            settings = JSON.parse(xhr.responseText);
         }
     }
     xhr.send();

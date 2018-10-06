@@ -1,12 +1,17 @@
-[{
-    "url": "https://www.google.de",
-    "duration": 5000
-},
 {
-    "url": "https://www.bing.com",
-    "duration": 5000
-},
-{
-    "url": "https://www.yahoo.com",
-    "duration": 5000
-}]
+    "fullscreen": true,
+    "urls": [
+        {
+            "url": "https://www.google.de",
+            "duration": 5000
+        },
+        {
+            "url": "https://www.bing.com",
+            "duration": 5000
+        },
+        {
+            "url": "https://www.yahoo.com",
+            "duration": 5000
+        }
+    ]
+}
