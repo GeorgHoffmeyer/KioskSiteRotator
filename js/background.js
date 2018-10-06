@@ -52,14 +52,6 @@ function increseCurrentIndex() {
 function init() {
     debug("init called");
     loadSettings();
-
-    if(settings.fullscreen) {
-        chrome.windows.update(windowId, { state: "fullscreen" })
-    } else {
-        chrome.windows.update(windowId, { state: "normal" })
-    }
-
-    chrome.alarms.create(alarmName, { when: Date.now() });
 }
 
 function loadSettings() {
@@ -69,6 +61,13 @@ function loadSettings() {
         if (xhr.readyState == 4) {
             // JSON.parse does not evaluate the attacker's scripts.
             settings = JSON.parse(xhr.responseText);
+            if(settings.fullscreen) {
+                chrome.windows.update(chrome.windows.WINDOW_ID_CURRENT, { state: "fullscreen" })
+            } else {
+                chrome.windows.update(chrome.windows.WINDOW_ID_CURRENT, { state: "normal" })
+            }
+
+            chrome.alarms.create(alarmName, { when: Date.now() });
         }
     }
     xhr.send();
