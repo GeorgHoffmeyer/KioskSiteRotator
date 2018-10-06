@@ -17,14 +17,15 @@ var activeTabId = null;
 const alarmName = "switchSite";
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-    console.log(formatDate(new Date()) + " [background.js] Button clicked");
-    console.log(formatDate(new Date()) + " [background.js] current Tab Id " + tab.id);
+    log("Button clicked");
+    log("current Tab Id " + tab.id);
 
-    if (activeTabId != null) {
-        console.log(formatDate(new Date()) + " [background.js] activated");
+    if (activeTabId == null) {
+        log("activated for Tab " + activeTabId);
         activeTabId = tab.id;
+        init();
     } else {
-        console.log(formatDate(new Date()) + " [background.js] deactivated");
+        log("deactivated");
         activeTabId = null;
     }
 });
@@ -41,26 +42,35 @@ function formatDate(date) {
     return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds + "." + milliseconds;
 }
 
+function log(message) {
+    console.log(formatDate(new Date()) + " [background.js] " + message);
+}
+
 function increseCurrentIndex() {
     currentIndex++;
     if (currentIndex >= urls.length) {
         currentIndex = 0;
     }
-    console.log(formatDate(new Date()) + " [background.js] CurrentIndex: " + currentIndex);
+    log("CurrentIndex: " + currentIndex);
+}
+
+function init() {
+    log("init called");
+    chrome.alarms.create(alarmName, { when: Date.now() });
 }
 
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.alarms.create(alarmName, { when: Date.now() });
+    init();
 });
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
 
-    if (alarm.name == alarmName) {
+    if (alarm.name == alarmName && activeTabId) {
         var urlObj = urls[currentIndex];
 
-        console.log(formatDate(new Date()) + " [background.js] URL: " + urlObj.url + " duration: " + urlObj.duration);
+        log("URL: " + urlObj.url + " duration: " + urlObj.duration);
 
-        chrome.tabs.executeScript({
+        chrome.tabs.executeScript(activeTabId, {
             code: 'window.location.href = "' + urlObj.url + '"'
         });
 
