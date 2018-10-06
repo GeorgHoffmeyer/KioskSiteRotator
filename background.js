@@ -13,34 +13,59 @@ var urls = [{
 }];
 
 var currentIndex = 0;
+var activeTabId = null;
+const alarmName = "switchSite";
 
-chrome.webNavigation.onCompleted.addListener(function(details) {
-    console.log("[background.js] CurrentIndex begin: " + currentIndex);
-    console.log("[background.js] url: " + urls[currentIndex].url);
-    chrome.tabs.executeScript({
-        code: 'window.setTimeout(function(){switchSite("'+ urls[currentIndex].url+'")}, '+ urls[currentIndex].duration+')'
-      })
-      currentIndex++;
-    if(currentIndex >= urls.length) {
+chrome.browserAction.onClicked.addListener(function (tab) {
+    console.log(formatDate(new Date()) + " [background.js] Button clicked");
+    console.log(formatDate(new Date()) + " [background.js] current Tab Id " + tab.id);
+
+    if (activeTabId != null) {
+        console.log(formatDate(new Date()) + " [background.js] activated");
+        activeTabId = tab.id;
+    } else {
+        console.log(formatDate(new Date()) + " [background.js] deactivated");
+        activeTabId = null;
+    }
+});
+
+function formatDate(date) {
+    var year = date.getFullYear();
+    var month = date.getMonth();
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var milliseconds = date.getMilliseconds();
+
+    return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds + "." + milliseconds;
+}
+
+function increseCurrentIndex() {
+    currentIndex++;
+    if (currentIndex >= urls.length) {
         currentIndex = 0;
-      }
-      console.log("[background.js] CurrentIndex end: " + currentIndex);
-    
-})
+    }
+    console.log(formatDate(new Date()) + " [background.js] CurrentIndex: " + currentIndex);
+}
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-    // No tabs or host permissions needed!
-    console.log("Button Clicked");
-    
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.alarms.create(alarmName, { when: Date.now() });
 });
 
-/*
-chrome.runtime.onInstalled.addListener(()=>{
-    //chrome.alarms.create("switchSite", {delayInMinutes: urls[0].duration} );
-    chrome.tabs.executeScript({
-        code: 'window.setTimeout(switchSite, ' + urls[0].duration + ')'
-    })
-});
-*/
+chrome.alarms.onAlarm.addListener(function (alarm) {
 
-//chrome.alarms.onAlarm.addListener(switchSite);
+    if (alarm.name == alarmName) {
+        var urlObj = urls[currentIndex];
+
+        console.log(formatDate(new Date()) + " [background.js] URL: " + urlObj.url + " duration: " + urlObj.duration);
+
+        chrome.tabs.executeScript({
+            code: 'window.location.href = "' + urlObj.url + '"'
+        });
+
+        chrome.alarms.create(alarmName, { when: Date.now() + 5000 });
+
+        increseCurrentIndex();
+    }
+});
