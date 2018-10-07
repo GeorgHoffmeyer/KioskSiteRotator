@@ -13,7 +13,8 @@
   "background": {
     "scripts": [
       "js/background.js",
-      "js/helper.js"
+      "js/helper.js",
+      "third-party/jquery-3.3.1.min.js"
     ]
   },
   "permissions": [

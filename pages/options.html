@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html>
-<head><title>My Test Extension Options</title></head>
+
+<head>
+  <title>My Test Extension Options</title>
+  <script src="../third-party/jquery-3.3.1.min.js"></script>
+</head>
+
 <body>
-<label>
-  <input type="text" id="settingsurl">
-  URL to load settings from
-</label>
+  <table>
+    <tr>
+      <td width="180px"><label for="loadfromserver">load from server</label></td>
+      <td><input type="checkbox" id="loadfromserver"></td>
+    </tr>
+    <tr>
+      <td width="180px"><label id="settingsurllabel">URL to load settings from</label></td>
+      <td><input type="text" id="settingsurl"></td>
+    </tr>
 
-<div id="status"></div>
-<button id="save">Save</button>
+    <tr>
+      <td width="180px"><label id="localdatalabel">Local Data</label></td>
+      <td><textarea id="localdata"></textarea></td>
+    </tr>
+  </table>
 
-<script src="../js/options.js"></script>
+  <div id="status"></div>
+  <button id="save">Save</button>
+
+  <script src="../js/options.js"></script>
 </body>
+
 </html>
