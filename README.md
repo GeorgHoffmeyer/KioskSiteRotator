@@ -27,3 +27,11 @@ The settings can be stored in a json file an the plugin will load it.
             }
         ]
     }
+
+# Installation
+
+This extension is in an early state of development, so there is no ready-to-install package and it is also not avaliable thru the chrome store.
+
+First you have to [donwload](https://github.com/GeorgHoffmeyer/KioskSiteRotator/archive/master.zip) or [clone](https://github.com/GeorgHoffmeyer/KioskSiteRotator.git) the repo.
+
+To install this extension you have to go to Menu -> More Tools -> Extensions (or type chrome://extensions/ in the Adreesbar). On this page you have to switch the developermode on. Now you can load the Extension from disk by clicking the button "Load unpacked extension".
