@@ -1,7 +1,7 @@
 
 const alarmName = "switchSite";
-const iconPlay = "img/play.png";
-const iconStop = "img/stop.png"
+const iconPlay = "../img/play.png";
+const iconStop = "../img/stop.png"
 var settings;
 var currentIndex = 0;
 var activeTabId = null;
@@ -14,12 +14,12 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     if (activeTabId == null) {
         debug("activated for Tab " + activeTabId);
         activeTabId = tab.id;
-		setIcon(iconPlay)
+		//setIcon(iconPlay)
         init();
     } else {
         debug("deactivated");
         activeTabId = null;
-		setIcon(iconStop);
+		//setIcon(iconStop);
     }
 });
 
@@ -44,7 +44,7 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
             code: 'window.location.href = "' + urlObj.url + '"'
         });
 
-        chrome.alarms.create(alarmName, { when: Date.now() + 5000 });
+        chrome.alarms.create(alarmName, { when: Date.now() + urlObj.duration });
 
         increseCurrentIndex();
     }
@@ -60,10 +60,19 @@ function increseCurrentIndex() {
 
 function init() {
     debug("init called");
-    loadSettings();
+	
+	chrome.storage.local.get(function(result) {
+		console.log(result);
+		if(result.loadfromserver) {
+			settingsUrl = result.settingsurl;
+            loadSettingsFromUrl();
+		} else {
+			//settings = JSON.parse(result.localdata);
+		}
+        });
 }
 
-function loadSettings() {
+function loadSettingsFromUrl() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", settingsUrl, true);
     xhr.onreadystatechange = function () {

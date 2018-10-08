@@ -1,16 +1,17 @@
 // Saves options to chrome.storage
 function save_options() {
-  var settingsurl = document.getElementById('settingsurl').value;
+  var settingsurl = $('#settingsurl').value;
   var loadfromserver = $('#loadfromserver')[0].checked;
   var localdata = $('#localdata').val();
+  //console.log(loadfromserver);
   
-  chrome.storage.sync.set({
+  chrome.storage.local.set({
     settingsurl: settingsurl,
     loadfromserver: loadfromserver,
     localdata: localdata
   }, function () {
     // Update status to let user know options were saved.
-    var status = document.getElementById('status');
+    var status = $('#status');
     status.textContent = 'Options saved.\n' + settingsurl + "\n" + loadfromserver;
     setTimeout(function () {
       status.textContent = '';
@@ -22,16 +23,19 @@ function save_options() {
 // stored in chrome.storage.
 function restore_options() {
   // Use default settingsurl as empty string
-  chrome.storage.sync.get({
+  chrome.storage.local.get({
     settingsurl: "",
     loadfromserver: false,
     localdata: '{"fullscreen": true,"urls": [{"url": "https://www.google.de","duration": 5000},{"url": "https://www.bing.com","duration": 5000},{"url": "https://www.yahoo.com","duration": 5000}]}'
   }, function (items) {
-    document.getElementById('settingsurl').value = items.settingsurl;
+	  console.log(items);
+    $('#settingsurl').value = items.settingsurl;
 	$('#localdata').val(items.localdata);
-    if(loadfromserver) {
+    if(items.loadfromserver) {
       $('#loadfromserver')[0].checked = true;
-    }
+    } else {
+	  $('#loadfromserver')[0].checked = false;
+	}
 
     setVisibilites();
   });
@@ -51,8 +55,15 @@ function setVisibilites() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click',
-  save_options);
+$('#save').click(function() {
+	console.log('save clicked')
+	save_options();
+});
 
-$("#loadfromserver").click(setVisibilites);
+$('#loadfromserver').click(function(){
+	setVisibilites();
+});
+
+$().ready(function(){
+	restore_options();
+});
