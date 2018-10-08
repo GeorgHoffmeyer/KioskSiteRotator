@@ -12,8 +12,8 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     debug("current Tab Id " + tab.id);
 
     if (activeTabId == null) {
-        debug("activated for Tab " + activeTabId);
         activeTabId = tab.id;
+        debug("activated for Tab " + activeTabId);
 		//setIcon(iconPlay)
         init();
     } else {
@@ -62,13 +62,17 @@ function init() {
     debug("init called");
 	
 	chrome.storage.local.get(function(result) {
-		console.log(result);
+		debug(result);
 		if(result.loadfromserver) {
+			debug("Loading from server");
 			settingsUrl = result.settingsurl;
             loadSettingsFromUrl();
 		} else {
-			//settings = JSON.parse(result.localdata);
+			debug("Loading from local");
+			debug(result.localdata);
+			settings = JSON.parse(result.localdata);
 		}
+	applySettings();
         });
 }
 
@@ -79,16 +83,21 @@ function loadSettingsFromUrl() {
         if (xhr.readyState == 4) {
             // JSON.parse does not evaluate the attacker's scripts.
             settings = JSON.parse(xhr.responseText);
-            if(settings.fullscreen) {
+            applySettings();
+        }
+    }
+    xhr.send();
+}
+
+function applySettings() {
+	debug("Apply Settings");
+	if(settings.fullscreen) {
                 chrome.windows.update(chrome.windows.WINDOW_ID_CURRENT, { state: "fullscreen" })
             } else {
                 chrome.windows.update(chrome.windows.WINDOW_ID_CURRENT, { state: "normal" })
             }
 
             chrome.alarms.create(alarmName, { when: Date.now() });
-        }
-    }
-    xhr.send();
 }
 
 function setIcon(icon) {
