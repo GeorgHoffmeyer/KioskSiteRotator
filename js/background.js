@@ -1,8 +1,10 @@
 
+const alarmName = "switchSite";
+const iconPlay = "img/play.png";
+const iconStop = "img/stop.png"
 var settings;
 var currentIndex = 0;
 var activeTabId = null;
-const alarmName = "switchSite";
 var settingsUrl;// = "https://georghoffmeyer.files.wordpress.com/2018/10/url_sample2.pdf";
 
 chrome.browserAction.onClicked.addListener(function (tab) {
@@ -12,10 +14,12 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     if (activeTabId == null) {
         debug("activated for Tab " + activeTabId);
         activeTabId = tab.id;
+		setIcon(iconPlay)
         init();
     } else {
         debug("deactivated");
         activeTabId = null;
+		setIcon(iconStop);
     }
 });
 
@@ -76,4 +80,8 @@ function loadSettings() {
         }
     }
     xhr.send();
+}
+
+function setIcon(icon) {
+    chrome.browserAction.setIcon({path: icon});
 }
