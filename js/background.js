@@ -1,7 +1,7 @@
 
 const alarmName = "switchSite";
-const iconPlay = "../img/play.png";
-const iconStop = "../img/stop.png"
+const iconPlay = "img/play.png";
+const iconStop = "img/stop.png"
 var settings;
 var currentIndex = 0;
 var activeTabId = null;
@@ -14,12 +14,12 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     if (activeTabId == null) {
         activeTabId = tab.id;
         debug("activated for Tab " + activeTabId);
-		//setIcon(iconPlay)
+		setIcon(iconPlay)
         init();
     } else {
         debug("deactivated");
         activeTabId = null;
-		//setIcon(iconStop);
+		setIcon(iconStop);
     }
 });
 
